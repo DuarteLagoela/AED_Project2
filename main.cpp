@@ -1,6 +1,6 @@
 #include <iostream>
-
+#include "source/FlightManagement.h"
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    FlightManagement fm = FlightManagement();
     return 0;
 }

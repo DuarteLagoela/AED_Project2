@@ -8,7 +8,7 @@
 using namespace std;
 
 #include <string>
-#include "FlightManagement.h"
+class FlightManagement;
 
 class DataSetLoader {
 

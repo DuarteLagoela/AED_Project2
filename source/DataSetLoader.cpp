@@ -11,6 +11,7 @@
 #include <sstream>
 
 void DataSetLoader::airportLoader(const string& airports_csv, FlightManagement &fm) {
+
     std::ifstream in(airports_csv);
 
     if (!in.is_open()) {
