@@ -1,0 +1,7 @@
+# .gitignore
+cmake-build-*/
+CMakeLists.txt.user
+*.exe
+*.out
+.idea/
+*.log
