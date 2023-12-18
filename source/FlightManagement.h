@@ -30,12 +30,14 @@ struct airline {
 };
 
 class FlightManagement {
-
+private:
     unordered_map<string, airport> airportMap;
     unordered_map<string, airline> airlinMap;
 
     Graph<airport> airNetwork;
 
+public:
+    void addAirport(airport airport);
 };
 
 

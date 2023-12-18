@@ -3,3 +3,7 @@
 //
 
 #include "FlightManagement.h"
+
+void FlightManagement::addAirport(airport airport) {
+    airportMap[airport.code] = airport;
+}
