@@ -31,6 +31,8 @@ struct airline {
 
 class FlightManagement {
 
+    unordered_map<string, airport> airportMap;
+    unordered_map<string, airline> airlinMap;
 
     Graph<airport> airNetwork;
 
