@@ -34,11 +34,13 @@ private:
     unordered_map<string, airport> airportMap;
     unordered_map<string, airline> airlineMap;
 
-    Graph<airport> airNetwork;
+    Graph<string> airNetwork;
 
 public:
     FlightManagement();
     void addAirport(airport airport);
+    void addAirline(airline airline);
+    void addFlight(string sourceCode, string targetCode, string airlineCode);
 };
 
 

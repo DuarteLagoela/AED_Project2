@@ -65,7 +65,7 @@ class Edge {
     double weight;         // edge weight
     string airlineCode;
 public:
-    Edge(Vertex<T> *d, const string& airlineCode, double w);
+    Edge(Vertex<T> *d, const string& airlineCode, double);
     Vertex<T> *getDest() const;
     void setDest(Vertex<T> *dest);
     double getWeight() const;
