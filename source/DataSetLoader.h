@@ -16,8 +16,8 @@ public:
     DataSetLoader() = default;
 
     void airportLoader(const string& airports_csv, FlightManagement& fm);
-    void airlineLoader(const string& airports_csv, FlightManagement& fm);
-    void flightsLoader(const string& airports_csv, FlightManagement& fm);
+    void airlineLoader(const string& airlines_csv, FlightManagement& fm);
+    void flightsLoader(const string& flights_csv, FlightManagement& fm);
 
 };
 

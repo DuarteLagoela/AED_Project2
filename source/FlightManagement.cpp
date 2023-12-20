@@ -16,6 +16,8 @@ FlightManagement::FlightManagement() {
 
     dsl.airportLoader("dataset/airports.csv", *this);
     dsl.airlineLoader("dataset/airlines.csv", *this);
+    dsl.flightsLoader("dataset/flights.csv", *this);
+
 }
 
 void FlightManagement::addAirline(airline airline) {
@@ -24,6 +26,7 @@ void FlightManagement::addAirline(airline airline) {
 
 void FlightManagement::addFlight(string sourceCode, string targetCode, string airlineCode) {
 
-    //airNetwork.addEdge(sourceCode, targetCode, airlineCode)
+    airNetwork.addEdge(sourceCode, targetCode, airlineCode);
+
 
 }

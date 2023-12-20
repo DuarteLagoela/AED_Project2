@@ -65,7 +65,7 @@ class Edge {
     double weight;         // edge weight
     string airlineCode;
 public:
-    Edge(Vertex<T> *d, const string& airlineCode, double);
+    Edge(Vertex<T> *d, const string& airlineCode, double w = 0);
     Vertex<T> *getDest() const;
     void setDest(Vertex<T> *dest);
     double getWeight() const;
@@ -88,7 +88,7 @@ public:
     int getNumVertex() const;
     bool addVertex(const T &in);
     bool removeVertex(const T &in);
-    bool addEdge(const T &sourc, const T &dest, const string& airlineCode, double w);
+    bool addEdge(const T &sourc, const T &dest, const string& airlineCode, double w = 0);
     bool removeEdge(const T &sourc, const T &dest);
     vector<Vertex<T> * > getVertexSet() const;
     vector<T> dfs() const;

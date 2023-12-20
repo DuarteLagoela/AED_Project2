@@ -55,9 +55,9 @@ void DataSetLoader::airportLoader(const string& airports_csv, FlightManagement &
 
 }
 
-void DataSetLoader::airlineLoader(const string& airports_csv, FlightManagement &fm) {
+void DataSetLoader::airlineLoader(const string& airlines_csv, FlightManagement &fm) {
 
-    std::ifstream in(airports_csv);
+    std::ifstream in(airlines_csv);
 
     if (!in.is_open()) {
         std::cerr << "Failed to open the file." << std::endl;
@@ -94,6 +94,35 @@ void DataSetLoader::airlineLoader(const string& airports_csv, FlightManagement &
     }
 }
 
-void DataSetLoader::flightsLoader(const string& airports_csv, FlightManagement &fm) {
+void DataSetLoader::flightsLoader(const string& flights_csv, FlightManagement &fm) {
+
+    std::ifstream in(flights_csv);
+
+    if (!in.is_open()) {
+        std::cerr << "Failed to open the file." << std::endl;
+        return;
+    }
+
+
+
+    string sourceCode;
+    string targetCode;
+    string airlineCode;
+
+    std::string line;
+    std::getline(in, line);
+
+    while (std::getline(in, line) )
+    {
+
+        std::istringstream ss(line);
+
+        std::getline(ss, sourceCode, ',');
+        std::getline(ss, targetCode, ',');
+        std::getline(ss, airlineCode, ',');
+
+        fm.addFlight(sourceCode, targetCode, airlineCode);
+
+    }
 
 }
