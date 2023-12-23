@@ -51,7 +51,7 @@ public:
     int nAvailableFlights();
 
     //ii
-    int nFlightsFromAirport(); //n flights and different companies
+    int nFlightsFromAirport(const string& airportCode); //n flights and different companies
 
     //iii
     int nFlightsCity();
