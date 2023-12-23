@@ -55,7 +55,57 @@ int FlightManagement::nFlightsFromAirport(const string& airportCode) {
     }
 
 
-
-
     return airlineSet.size();
+}
+
+int FlightManagement::reachableCountriesFromAirport(const string& airportCode) {
+    Vertex<string>* src_airport= airNetwork.findVertex(airportCode);
+
+    if (!src_airport) {
+        cout << "Invalid airport" << endl;
+        return 0;
+    }
+
+    set<string> countrySet;
+
+    for (auto e : src_airport->getAdj()) {
+        string country = airportMap[e.getDest()->getInfo()].country;
+        auto p = countrySet.insert(country);
+    }
+
+    cout << "Available countries:" << endl;
+    for (auto c : countrySet) {
+        cout << c << endl;
+    }
+
+    int nCountries = countrySet.size();
+
+    cout << "You can travel to " << nCountries << " different countries departing from the " << airportMap[airportCode].name << " airport." << endl;
+    return nCountries;
+}
+
+int FlightManagement::reachableCitiesFromAirport(const string &airportCode) {
+    Vertex<string>* src_airport= airNetwork.findVertex(airportCode);
+
+    if (!src_airport) {
+        cout << "Invalid airport" << endl;
+        return 0;
+    }
+
+    set<string> citySet;
+
+    for (auto e : src_airport->getAdj()) {
+        string country = airportMap[e.getDest()->getInfo()].city;
+        auto p = citySet.insert(country);
+    }
+
+    cout << "Available countries:" << endl;
+    for (auto c : citySet) {
+        cout << c << endl;
+    }
+
+    int nCities = citySet.size();
+
+    cout << "You can travel to " << nCities << " different cities departing from the " << airportMap[airportCode].name << " airport." << endl;
+    return nCities;
 }

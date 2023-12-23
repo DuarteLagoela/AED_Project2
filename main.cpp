@@ -2,6 +2,6 @@
 #include "source/FlightManagement.h"
 int main() {
     FlightManagement fm = FlightManagement();
-    fm.nFlightsFromAirport("JFK");
+    fm.reachableCitiesFromAirport("JFK");
     return 0;
 }
