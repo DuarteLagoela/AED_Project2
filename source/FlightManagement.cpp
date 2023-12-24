@@ -136,3 +136,28 @@ int FlightManagement::reachableAirportsFromAirport(const string &airportCode) {
     cout << "You can travel to " << nAirports << " different airports departing from the " << airportMap[airportCode].name << " airport." << endl;
     return nAirports;
 }
+
+void FlightManagement::topTrafficAirports(int k) {
+
+    set<pair<int, string>> flightsAirport;
+
+    for (auto& v : airNetwork.getVertexSet()) {
+        flightsAirport.insert({v->getAdj().size(), v->getInfo()});
+    }
+
+    cout << "Top " << k << " airports with greatest traffic" << endl;
+    cout << left <<setw(43) << "\nAirport:" << setw(20) << "Number of Flights:" << endl;
+
+    int n = 0;
+    auto end = flightsAirport.end();
+    end--;
+    for (auto it = end; it != flightsAirport.begin(); it--) {
+        n++;
+        cout << left << n << "- " << setw(4)<< it->second << setw(35) << airportMap[it->second].name << setw(20) << it->first << endl;
+
+        if (n == k){ return;}
+    }
+
+
+
+}
