@@ -109,3 +109,30 @@ int FlightManagement::reachableCitiesFromAirport(const string &airportCode) {
     cout << "You can travel to " << nCities << " different cities departing from the " << airportMap[airportCode].name << " airport." << endl;
     return nCities;
 }
+
+int FlightManagement::reachableAirportsFromAirport(const string &airportCode) {
+
+    Vertex<string>* src_airport= airNetwork.findVertex(airportCode);
+
+    if (!src_airport) {
+        cout << "Invalid airport" << endl;
+        return 0;
+    }
+
+    set<string> airportSet;
+
+    for (auto e : src_airport->getAdj()) {
+        string airportCode = e.getDest()->getInfo();
+        auto p = airportSet.insert(airportCode);
+    }
+
+    cout << "Available airports:" << endl;
+    for (auto c : airportSet) {
+        cout << c << " " << airportMap[c].name << endl;
+    }
+
+    int nAirports = airportSet.size();
+
+    cout << "You can travel to " << nAirports << " different airports departing from the " << airportMap[airportCode].name << " airport." << endl;
+    return nAirports;
+}
