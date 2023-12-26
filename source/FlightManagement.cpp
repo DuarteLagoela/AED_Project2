@@ -43,6 +43,7 @@ int FlightManagement::nFlightsFromAirport(const string& airportCode) {
         return 0;
     }
 
+
     cout << left << setw(54) << "Destination:" << setw(10) << "Airline:" << endl;
 
     for (const Edge<string>& e : src_ptr->getAdj()) {
@@ -52,10 +53,12 @@ int FlightManagement::nFlightsFromAirport(const string& airportCode) {
         cout << left << setw(4) << destinationCode << setw(50) << destinationAirport.name
              << setw(4) << airlineCode << airlineMap[airlineCode].name << endl;
         airlineSet.insert(e.getAirlineCode());
+        res++;
     }
 
+    cout << "There are " << res << " flights available from " << airlineSet.size() << " different airlines." << endl;
 
-    return airlineSet.size();
+    return res;
 }
 
 int FlightManagement::reachableCountriesFromAirport(const string& airportCode) {
@@ -108,6 +111,7 @@ int FlightManagement::reachableCitiesFromAirport(const string &airportCode) {
 
     cout << "You can travel to " << nCities << " different cities departing from the " << airportMap[airportCode].name << " airport." << endl;
     return nCities;
+
 }
 
 int FlightManagement::reachableAirportsFromAirport(const string &airportCode) {

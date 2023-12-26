@@ -2,6 +2,6 @@
 #include "source/FlightManagement.h"
 int main() {
     FlightManagement fm = FlightManagement();
-    fm.topTrafficAirports(5);
+    fm.nFlightsFromAirport("ORY");
     return 0;
 }
