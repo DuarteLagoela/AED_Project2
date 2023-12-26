@@ -54,7 +54,7 @@ public:
     int nAvailableFlights();
 
     //ii
-    int nFlightsFromAirport(); //n flights and different companies
+    int nFlightsFromAirport(const string& airportCode); //n flights and different companies
 
     //iii
     int nFlightsCity(string city, string country);
@@ -67,7 +67,9 @@ public:
 
     //v
 
-    int reachableCountriesFromAirport();
+    int reachableCountriesFromAirport(const string& airportCode);
+    int reachableCitiesFromAirport(const string& airportCode);
+    int reachableAirportsFromAirport(const string& airportCode);
 
 
     //vi

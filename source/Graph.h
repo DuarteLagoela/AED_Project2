@@ -75,6 +75,11 @@ public:
     friend class Vertex<T>;
 };
 
+template<class T>
+string Edge<T>::getAirlineCode() const {
+    return airlineCode;
+}
+
 template <class T>
 class Graph {
     vector<Vertex<T> *> vertexSet;      // vertex set
