@@ -86,7 +86,7 @@ public:
 
     /**Best Flight Option*/
 
-    vector<map<string,string>> bestFlightAirportCode(const string& sourceCode, const string& targetCode);
+    vector<vector<pair<string,string>>> bestFlightAirportCode(const string& sourceCode, const string& targetCode);
     void bestFlightAirportName(const string sourceName, const string& targetName);
 
     void bestFlightCity(const string sourceName, const string& targetName);

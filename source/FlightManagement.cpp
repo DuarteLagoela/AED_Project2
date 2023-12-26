@@ -251,11 +251,14 @@ bool inStack(Vertex<string>* w,stack<string> s){
 
 // 4. Best flight option
 // assim n estão organizados e demora muito ~30s
-void dfsVisit(Vertex<string> *s, Vertex<string> *t, map<string,string> path, vector<map<string,string>> &res, string airline) {
+void dfsVisit(Vertex<string> *s, Vertex<string> *t, vector<pair<string,string>> path, vector<vector<pair<string,string>>> &res, string airline, int &cap) {
+    path.push_back(make_pair(s->getInfo(),airline));
+    if (path.size() > cap) return;
     s->setVisited(true);
-    path[s->getInfo()] = airline;
+
     if (s->getInfo() == t->getInfo()) {
         res.push_back(path);
+        cap = (int) path.size();
         s->setVisited(false);
         return;
     }
@@ -263,17 +266,17 @@ void dfsVisit(Vertex<string> *s, Vertex<string> *t, map<string,string> path, vec
     for (auto & e : s->getAdj()) {
         auto w = e.getDest();
         if (!w->isVisited()){
-            dfsVisit(w, t, path, res, e.getAirlineCode());
+            dfsVisit(w, t, path, res, e.getAirlineCode(), cap);
         }
     }
 }
 
-vector<map<string,string>> FlightManagement::bestFlightAirportCode(const std::string &sourceCode, const std::string &targetCode) {
+vector<vector<pair<string,string>>> FlightManagement::bestFlightAirportCode(const std::string &sourceCode, const std::string &targetCode) {
     auto source = airNetwork.findVertex(sourceCode);
     auto target = airNetwork.findVertex(targetCode);
-    vector<map<string,string>> final;
-    vector<map<string,string>> res;
-    map<string,string> path;
+    vector<vector<pair<string,string>>> final;
+    vector<vector<pair<string,string>>> res;
+    vector<pair<string,string>> path;
 
     if (source == NULL) {
         cout << "Airport " << sourceCode << " doesn't exist." << endl;
@@ -287,7 +290,8 @@ vector<map<string,string>> FlightManagement::bestFlightAirportCode(const std::st
     for (auto v : airNetwork.getVertexSet())
         v->setVisited(false);
 
-    dfsVisit(source, target, path, res, "");
+    int cap = INT_MAX;
+    dfsVisit(source, target, path, res, "", cap);
 
     int min = INT_MAX;
     for (auto x : res){
@@ -297,7 +301,7 @@ vector<map<string,string>> FlightManagement::bestFlightAirportCode(const std::st
     for (auto x : res){
         if (x.size() == min) final.push_back(x);
     }
-    return final;
+    return res;
 }
 /*
 void dfsVisit(Vertex<string> *s, Vertex<string> *t, vector<Edge<string>> path, vector<vector<Edge<string>>> &res) {
