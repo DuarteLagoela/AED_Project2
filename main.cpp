@@ -8,7 +8,7 @@ int main() {
     // long x = fm.nFlightsCity("Porto","Portugal");
     std::cout << "Breakpoint here" << endl;
 
-    auto y = fm.bestFlightAirportCode("OPO","LIS");
+    auto y = fm.bestFlightAirportCode("OPO","AMM");
     // auto aYO = fm.essentialAirports().size();
     std::cout << "Breakpoint here" << endl;
     return 0;

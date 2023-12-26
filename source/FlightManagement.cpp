@@ -250,7 +250,6 @@ bool inStack(Vertex<string>* w,stack<string> s){
 }
 
 // 4. Best flight option
-// assim n estão organizados e demora muito ~30s
 void dfsVisit(Vertex<string> *s, Vertex<string> *t, vector<pair<string,string>> path, vector<vector<pair<string,string>>> &res, string airline, int &cap) {
     path.push_back(make_pair(s->getInfo(),airline));
     if (path.size() > cap) return;
@@ -301,7 +300,7 @@ vector<vector<pair<string,string>>> FlightManagement::bestFlightAirportCode(cons
     for (auto x : res){
         if (x.size() == min) final.push_back(x);
     }
-    return res;
+    return final;
 }
 /*
 void dfsVisit(Vertex<string> *s, Vertex<string> *t, vector<Edge<string>> path, vector<vector<Edge<string>>> &res) {
