@@ -70,6 +70,7 @@ public:
     void setDest(Vertex<T> *dest);
     double getWeight() const;
     void setWeight(double weight);
+    string getAirlineCode() const;
     friend class Graph<T>;
     friend class Vertex<T>;
 };
@@ -144,6 +145,11 @@ Vertex<T> *Edge<T>::getDest() const {
 template<class T>
 void Edge<T>::setDest(Vertex<T> *d) {
     Edge::dest = d;
+}
+
+template<class T>
+string Edge<T>::getAirlineCode() const{
+    return airlineCode;
 }
 
 template<class T>
@@ -483,5 +489,16 @@ vector<T> Graph<T>::topsort() const {
 
     return res;
 }
+/*
+template <class T>
+int getInDegree(Graph<T> airNetwork, Vertex<string> airport){
+    int res = 0;
+    for (auto x : airNetwork.getVertexSet()){
+        for (auto e : x.getAdj()){
+            if (e.getDest() == airport.getInfo()) res++;
+        }
+    }
+    return res;
+}*/
 
 #endif //AED_PROJECT2_GRAPH_H

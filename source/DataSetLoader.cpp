@@ -122,7 +122,6 @@ void DataSetLoader::flightsLoader(const string& flights_csv, FlightManagement &f
         std::getline(ss, airlineCode, ',');
 
         fm.addFlight(sourceCode, targetCode, airlineCode);
-
     }
 
 }

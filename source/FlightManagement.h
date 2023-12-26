@@ -11,6 +11,9 @@ using namespace std;
 #include "Graph.h"
 #include <string>
 #include "unordered_map"
+#include <unordered_set>
+#include <map>
+
 
 struct airport {
     string code;
@@ -54,8 +57,8 @@ public:
     int nFlightsFromAirport(); //n flights and different companies
 
     //iii
-    int nFlightsCity();
-    int nFlightsAirline();
+    int nFlightsCity(string city, string country);
+    int nFlightsAirline(string airline);
 
     //iv
     //In one flight
@@ -68,9 +71,9 @@ public:
 
 
     //vi
-    int reachableAirportsInXStops();
-    int reachableCitiesInXStops();
-    int reachableCountriesInXStops();
+    int reachableAirportsInXStops(string source, int x);
+    int reachableCitiesInXStops(string source, int x);
+    int reachableCountriesInXStops(string source, int x);
 
     //vii
     void maxTrip(const string& airportCode);
@@ -79,11 +82,11 @@ public:
     void topTrafficAirports(int k);
 
     //ix
-    void essentialAirports();//articulation points
+    unordered_set<string> essentialAirports();//articulation points
 
     /**Best Flight Option*/
 
-    void bestFlightAirportCode(const string& sourceCode, const string& targetCode);
+    vector<map<string,string>> bestFlightAirportCode(const string& sourceCode, const string& targetCode);
     void bestFlightAirportName(const string sourceName, const string& targetName);
 
     void bestFlightCity(const string sourceName, const string& targetName);
