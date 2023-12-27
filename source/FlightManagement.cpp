@@ -37,6 +37,8 @@ void FlightManagement::addFlight(string sourceCode, string targetCode, string ai
     auto v = airNetwork.findVertex(targetCode);
     v->increaseInDegree();
 }
+
+// 3. Statistics of the network
 // ii
 int FlightManagement::nFlightsFromAirport(const string& airportCode) {
 
