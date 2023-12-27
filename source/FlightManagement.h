@@ -57,8 +57,8 @@ public:
     int nFlightsFromAirport(const string& airportCode); //n flights and different companies
 
     //iii
-    int nFlightsCity(string city, string country);
-    int nFlightsAirline(string airline);
+    void nFlightsCity();
+    void nFlightsAirline();
 
     //iv
     //In one flight
@@ -87,8 +87,8 @@ public:
     unordered_set<string> essentialAirports();//articulation points
 
     /**Best Flight Option*/
-
-    vector<vector<pair<string,string>>> bestFlightAirportCode(const string& sourceCode, const string& targetCode);
+    void bestFlightOption();
+    vector<vector<pair<string,string>>> bestFlightOption(const vector<Vertex<string>*> source, const vector<Vertex<string>*> target);
     void bestFlightAirportName(const string sourceName, const string& targetName);
 
     void bestFlightCity(const string sourceName, const string& targetName);

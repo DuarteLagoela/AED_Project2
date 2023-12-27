@@ -27,7 +27,7 @@ class Vertex {
     vector<Edge<T> > adj;  // list of outgoing edges
     bool visited;          // auxiliary field
     bool processing;       // auxiliary field
-    int indegree;          // auxiliary field
+    int indegree = 0;          // auxiliary field
     int num;               // auxiliary field
     int low;               // auxiliary field
 
@@ -46,7 +46,7 @@ public:
 
     int getIndegree() const;
 
-    void setIndegree(int indegree);
+    void increaseInDegree();
 
     int getNum() const;
 
@@ -153,11 +153,6 @@ void Edge<T>::setDest(Vertex<T> *d) {
 }
 
 template<class T>
-string Edge<T>::getAirlineCode() const{
-    return airlineCode;
-}
-
-template<class T>
 double Edge<T>::getWeight() const {
     return weight;
 }
@@ -189,8 +184,8 @@ int Vertex<T>::getIndegree() const {
 }
 
 template<class T>
-void Vertex<T>::setIndegree(int indegree) {
-    Vertex::indegree = indegree;
+void Vertex<T>::increaseInDegree(){
+    indegree++;
 }
 
 template<class T>
