@@ -12,6 +12,8 @@
 #include <iostream>
 #include <iomanip>
 #include <set>
+#include <cmath>
+
 void FlightManagement::addAirport(airport airport) {
     airportMap[airport.code] = airport;
     airNetwork.addVertex(airport.code);
@@ -436,8 +438,36 @@ vector<vector<pair<string,string>>> FlightManagement::bestFlightOption(const vec
     }
     return final;
 }
+double toRadians(double degree) {
+    return degree * (M_PI / 180.0);
+}
 
-void FlightManagement::bestFlightOption(){
+// Haversine distance calculation function
+double haversineDistance(double lat1, double lon1, double lat2, double lon2) {
+    // Radius of the Earth in kilometers
+    const double earthRadius = 6371.0;
+
+    // Convert latitude and longitude from degrees to radians
+    lat1 = toRadians(lat1);
+    lon1 = toRadians(lon1);
+    lat2 = toRadians(lat2);
+    lon2 = toRadians(lon2);
+
+    // Calculate differences
+    double dlat = lat2 - lat1;
+    double dlon = lon2 - lon1;
+
+    // Haversine formula
+    double a = sin(dlat / 2.0) * sin(dlat / 2.0) +
+               cos(lat1) * cos(lat2) * sin(dlon / 2.0) * sin(dlon / 2.0);
+    double c = 2.0 * atan2(sqrt(a), sqrt(1.0 - a));
+
+    // Calculate the distance
+    double distance = earthRadius * c;
+
+    return distance;
+}
+void FlightManagement::bestFlightOption(){ // TODO: DOESN'T WORK WHEN CITY/COUNTRY HAS SPACES
     vector<Vertex<string>*> source;
     vector<Vertex<string>*> target;
     cout << "Select source by:" << endl <<
@@ -461,7 +491,7 @@ void FlightManagement::bestFlightOption(){
         else source.push_back(s);
     }
     if (input == 2) {
-        cout << "Airport name:" << endl;
+        cout << "Airport name:";
         cin >> a;
         string st = NULL;
         for (auto x : airportMap){
@@ -496,8 +526,24 @@ void FlightManagement::bestFlightOption(){
         }
     }
     if (input == 4) {
-        cout << "Airport code:" << endl;
-        //TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        double lat, lon;
+        cout << "Latitude:";
+        cin >> lat;
+        cout << "Longitude:";
+        cin >> lon;
+        double min = INT_MAX;
+        airport closest;
+        for (auto airport : airportMap){
+            double distance = haversineDistance(lat,lon,airport.second.latitude,airport.second.longitude);
+            if (distance < min){
+                min = distance;
+                closest = airport.second;
+            }
+        }
+        auto s = airNetwork.findVertex(closest.code);
+        cout << "Closest airport: " << closest.name << " (" << closest.code << ") in " << closest.city
+            << ", " <<  closest.country << endl;
+        source.push_back(s);
     }
 
     cout << "Select target by:" << endl <<
@@ -554,8 +600,24 @@ void FlightManagement::bestFlightOption(){
         }
     }
     if (input == 4) {
-        cout << "Airport code:" << endl;
-        //TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        double lat, lon;
+        cout << "Latitude:";
+        cin >> lat;
+        cout << "Longitude:";
+        cin >> lon;
+        double min = INT_MAX;
+        airport closest;
+        for (auto airport : airportMap){
+            double distance = haversineDistance(lat,lon,airport.second.latitude,airport.second.longitude);
+            if (distance < min){
+                min = distance;
+                closest = airport.second;
+            }
+        }
+        auto s = airNetwork.findVertex(closest.code);
+        cout << "Closest airport: " << closest.name << " (" << closest.code << ") in " << closest.city
+             << ", " <<  closest.country << endl;
+        target.push_back(s);
     }
 
     auto ans = bestFlightOption(source,target);
