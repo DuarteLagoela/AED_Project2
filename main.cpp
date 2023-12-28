@@ -5,13 +5,7 @@ int main() {
 
     // Low Traffic Airports for testing: CPO, LYB, GKA, CYB
 
-    // long x = fm.nFlightsCity("Porto","Portugal");
-    std::cout << "Breakpoint here" << endl;
-    //std::cout << fm.essentialAirports().size();
-    fm.bestFlightOption();
-    // auto aYO = fm.essentialAirports().size();
-    std::cout << "Breakpoint here" << endl;
 
-    //fm.nFlightsFromAirport("ORY");
+    cout << fm.reachableAirportsInXStops("ORY", 2);
     return 0;
 }

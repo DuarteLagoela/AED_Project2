@@ -13,6 +13,7 @@
 #include <iomanip>
 #include <set>
 #include <cmath>
+#include <climits>
 
 void FlightManagement::addAirport(airport airport) {
     airportMap[airport.code] = airport;
