@@ -387,45 +387,59 @@ bool inStack(Vertex<string>* w,stack<string> s){
     while(!s.empty()){
         string a = s.top();
         s.pop();
-        if(a == w->getInfo())return true;
+        if(a == w->getInfo()) return true;
     }
     return false;
 }
 
 // 4. Best flight option
-void dfsVisit(Vertex<string> *s, Vertex<string> *t, vector<pair<string,string>> path, vector<vector<pair<string,string>>> &res, string airline, int &cap) {
-    path.push_back(make_pair(s->getInfo(),airline));
-    if (path.size() > cap) return;
-    s->setVisited(true);
 
-    if (s->getInfo() == t->getInfo()) {
-        res.push_back(path);
-        cap = (int) path.size();
-        s->setVisited(false);
-        return;
-    }
-
-    for (auto & e : s->getAdj()) {
-        auto w = e.getDest();
-        if (!w->isVisited()){
-            dfsVisit(w, t, path, res, e.getAirlineCode(), cap);
-        }
-    }
-}
-
-vector<vector<pair<string,string>>> FlightManagement::bestFlightOption(const vector<Vertex<string>*> sourceVector, const vector<Vertex<string>*> targetVector) {
+vector<vector<pair<string,string>>> FlightManagement::bestFlightOption(const vector<Vertex<string>*> sourceVector, const vector<Vertex<string>*> targetVector, int maxAirlines, unordered_set<string> airlinesSet) {
 
     vector<vector<pair<string,string>>> final;
     vector<vector<pair<string,string>>> res;
+    vector<vector<pair<string,string>>> filtered;
 
     for(auto source : sourceVector){
         for (auto target : targetVector){
 
-            for (auto v : airNetwork.getVertexSet())
+            for (auto v : airNetwork.getVertexSet()){
                 v->setVisited(false);
-            vector<pair<string,string>> path;
-            int cap = INT_MAX;
-            dfsVisit(source, target, path, res, "", cap);
+                v->setProcessing(false);
+            }
+
+            std::queue<std::vector<std::pair<std::string, std::string>>> q;
+
+            // Push root element
+            q.push({{source->getInfo(), "ignore"}});
+            source->setVisited(true);
+
+            while(!q.empty()){
+                // Root path
+                std::vector<std::pair<string, std::string>> rootPath = q.front();
+                q.pop();
+
+                auto prev = rootPath.back().first;
+
+                for(auto e : airNetwork.findVertex(prev)->getAdj()){
+                    auto w = e.getDest();
+                    if(!w->isVisited()){
+                        std::vector<std::pair<std::string, std::string>> childPath = rootPath;
+                        childPath.emplace_back(w->getInfo(), e.getAirlineCode());
+
+                        if(w == target){
+                            if((res.empty() || childPath.size() <= res.front().size())  /*&& this->checkFilters(childPath, filter)*/){
+                                res.push_back(childPath);
+                            }
+                            continue;
+                        }
+
+                        std::vector<std::pair<string, std::string>> newPath = childPath;
+                        q.push(newPath);
+                        w->setVisited(true);
+                    }
+                }
+            }
         }
     }
     int min = INT_MAX;
@@ -435,6 +449,21 @@ vector<vector<pair<string,string>>> FlightManagement::bestFlightOption(const vec
 
     for (auto x : res){
         if (x.size() == min) final.push_back(x);
+    }
+
+    // Filters
+    for (auto it = final.begin(); it != final.end(); it++){
+        unordered_set<string> airlines;
+        for (auto flight : *it){
+            bool found = false;
+            airlines.insert(flight.second);
+            for (auto airline : airlinesSet){
+                if (airline == flight.second) found = true;
+            }
+            if (*airlinesSet.begin() == "ignore") continue;
+            if (!found) final.erase(it);
+        }
+        if (airlines.size() > maxAirlines) final.erase(it);
     }
     return final;
 }
@@ -467,7 +496,7 @@ double haversineDistance(double lat1, double lon1, double lat2, double lon2) {
 
     return distance;
 }
-void FlightManagement::bestFlightOption(){ // TODO: DOESN'T WORK WHEN CITY/COUNTRY HAS SPACES
+void FlightManagement::bestFlightOption(){
     vector<Vertex<string>*> source;
     vector<Vertex<string>*> target;
     cout << "Select source by:" << endl <<
@@ -492,24 +521,30 @@ void FlightManagement::bestFlightOption(){ // TODO: DOESN'T WORK WHEN CITY/COUNT
     }
     if (input == 2) {
         cout << "Airport name:";
-        cin >> a;
-        string st = NULL;
+        cin.ignore();
+        getline(cin, a);
+        string code = "";
         for (auto x : airportMap){
-            if (x.second.name == a) st = x.second.code;
+            if (x.second.name == a) {
+                code = x.second.code;
+            }
         }
-        auto s = airNetwork.findVertex(st);
-        if (s == NULL) {
+        if (code == "") {
             cout << "Airport not found." << endl;
             bestFlightOption();
             return;
         }
-        else source.push_back(s);
+        else {
+            auto s = airNetwork.findVertex(code);
+            source.push_back(s);
+        }
     }
     if (input == 3) {
         cout << "Country:";
-        cin >> a;
+        cin.ignore();
+        getline(cin, a);
         cout << "City:";
-        cin >> b;
+        getline(cin, b);
 
         bool found = false;
         for (auto x : airportMap){
@@ -527,10 +562,28 @@ void FlightManagement::bestFlightOption(){ // TODO: DOESN'T WORK WHEN CITY/COUNT
     }
     if (input == 4) {
         double lat, lon;
-        cout << "Latitude:";
-        cin >> lat;
-        cout << "Longitude:";
-        cin >> lon;
+        while (true) {
+            cout << "Latitude:";
+            if (std::cin >> lat) {
+                break;
+            }
+            else {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "Invalid latitude." << std::endl;
+            }
+        }
+        while (true) {
+            cout << "Longitude:";
+            if (std::cin >> lon) {
+                break;
+            }
+            else {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "Invalid longitude." << std::endl;
+            }
+        }
         double min = INT_MAX;
         airport closest;
         for (auto airport : airportMap){
@@ -555,7 +608,7 @@ void FlightManagement::bestFlightOption(){ // TODO: DOESN'T WORK WHEN CITY/COUNT
     cin >> input;
 
     if (input == 1) {
-        cout << "Airport code:" << endl;
+        cout << "Airport code:";
         cin >> a;
         auto s = airNetwork.findVertex(a);
         if (s == NULL) {
@@ -566,25 +619,31 @@ void FlightManagement::bestFlightOption(){ // TODO: DOESN'T WORK WHEN CITY/COUNT
         else target.push_back(s);
     }
     if (input == 2) {
-        cout << "Airport name:" << endl;
-        cin >> a;
-        string st = NULL;
+        cout << "Airport name:";
+        cin.ignore();
+        getline(cin, a);
+        string code = "";
         for (auto x : airportMap){
-            if (x.second.name == a) st = x.second.code;
+            if (x.second.name == a) {
+                code = x.second.code;
+            }
         }
-        auto s = airNetwork.findVertex(st);
-        if (s == NULL) {
+        if (code == "") {
             cout << "Airport not found." << endl;
             bestFlightOption();
             return;
         }
-        else target.push_back(s);
+        else {
+            auto s = airNetwork.findVertex(code);
+            target.push_back(s);
+        }
     }
     if (input == 3) {
-        cout << "Country:" << endl;
-        cin >> a;
-        cout << "City" << endl;
-        cin >> b;
+        cout << "Country:";
+        cin.ignore();
+        getline(cin, a);
+        cout << "City:";
+        getline(cin, b);
         bool found = false;
         for (auto x : airportMap){
             if (x.second.country == a && x.second.city == b) {
@@ -601,10 +660,28 @@ void FlightManagement::bestFlightOption(){ // TODO: DOESN'T WORK WHEN CITY/COUNT
     }
     if (input == 4) {
         double lat, lon;
-        cout << "Latitude:";
-        cin >> lat;
-        cout << "Longitude:";
-        cin >> lon;
+        while (true) {
+            cout << "Latitude:";
+            if (std::cin >> lat) {
+                break;
+            }
+            else {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "Invalid latitude." << std::endl;
+            }
+        }
+        while (true) {
+            cout << "Longitude:";
+            if (std::cin >> lon) {
+                break;
+            }
+            else {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "Invalid longitude." << std::endl;
+            }
+        }
         double min = INT_MAX;
         airport closest;
         for (auto airport : airportMap){
@@ -620,7 +697,32 @@ void FlightManagement::bestFlightOption(){ // TODO: DOESN'T WORK WHEN CITY/COUNT
         target.push_back(s);
     }
 
-    auto ans = bestFlightOption(source,target);
+    cout << "Would you like to specify which airlines to fly?(y/n)";
+    string x;
+    cin >> x;
+    unordered_set<string> airlines;
+    if (x == "y"){
+        while(true){
+            string airline;
+            cout << "New airline (insert 'q' to stop):";
+            cin >> airline;
+            if (airline == "q") break;
+            auto tomas = airlineMap.find(airline);
+            if (tomas == airlineMap.end()) cout << "Invalid airline" << endl;
+            else airlines.insert(tomas->first);
+        }
+    }
+    else airlines.insert("ignore");
+
+    cout << "Would you like to set a max number of different airlines?(y/n)";
+    cin >> x;
+    int maxAirlines = INT_MAX;
+    if (x == "y"){
+        cout << "Number of different airlines:";
+        cin >> maxAirlines;
+    }
+
+    auto ans = bestFlightOption(source,target, maxAirlines,airlines);
     int i = 1;
     cout << "There are " << ans.size() << " flight options with " << ans[0].size() - 1 << " stops each:" << endl;
     for (auto option : ans) {
