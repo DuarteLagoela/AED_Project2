@@ -723,14 +723,18 @@ void FlightManagement::bestFlightOption(){
     }
 
     auto ans = bestFlightOption(source,target, maxAirlines,airlines);
-    int i = 1;
-    cout << "There are " << ans.size() << " flight options with " << ans[0].size() - 1 << " stops each:" << endl;
-    for (auto option : ans) {
-        cout << "Option " << i++ << ":" << endl;
-        for (int i = 1; i < option.size(); i++) {
-            cout << i << ". " << option[i-1].first << " -> "  << option[i].first << " via " << option[i].second << endl;
+    if (ans.empty()) cout << "There aren't any flights available.";
+    else {
+        int i = 1;
+        cout << "There are " << ans.size() << " flight options with " << ans[0].size() - 1 << " stops each:" << endl;
+        for (auto option: ans) {
+            cout << "Option " << i++ << ":" << endl;
+            for (int i = 1; i < option.size(); i++) {
+                cout << i << ". " << option[i - 1].first << " -> " << option[i].first << " via " << option[i].second
+                     << endl;
+            }
+            cout << endl;
         }
-        cout << endl;
     }
 }
 
