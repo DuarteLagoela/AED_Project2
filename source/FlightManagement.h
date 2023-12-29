@@ -79,6 +79,7 @@ public:
 
     //vii
     void maxTrip(const string& airportCode);
+    void dfsMaxTrip(Vertex<string>* currentAirport, vector<string>& currentPath, vector<pair<string, string>>& maxTripPairs, int& maxStops);
 
     //viii
     void topTrafficAirports(int k);
