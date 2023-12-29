@@ -313,30 +313,56 @@ int FlightManagement::reachableCountriesInXStops(string source, int x) {
     return (int) res.size() - 1;
 }
 // viii
-void FlightManagement::topTrafficAirports(int k) {
+#include <iostream>
+#include <iomanip>
+#include <unordered_map>
+#include <queue>
 
-    set<pair<int, string>> flightsAirport;
+// Assuming FlightManagement class has a member variable airNetwork of type AirNetwork
+
+void FlightManagement::topTrafficAirports(int k) {
+    std::unordered_map<std::string, unsigned int> flightsAirport;
+
+    // Priority queue to store the top airports based on traffic
+    std::priority_queue<std::pair<unsigned int, std::string>> topAirports;
 
     for (auto& v : airNetwork.getVertexSet()) {
-        flightsAirport.insert({v->getAdj().size(), v->getInfo()});
+        std::string source = v->getInfo();
+
+        // Out flights for source
+        if (flightsAirport.find(source) != flightsAirport.end()) {
+            flightsAirport[source] += v->getAdj().size();
+        } else {
+            flightsAirport[source] = v->getAdj().size();
+        }
+
+        // Incoming flights for dest
+        for (auto& f : v->getAdj()) {
+            std::string dest = f.getDest()->getInfo();
+            if (flightsAirport.find(dest) != flightsAirport.end()) {
+                flightsAirport[dest]++;
+            } else {
+                flightsAirport[dest] = 1;
+            }
+        }
     }
 
-    cout << "Top " << k << " airports with greatest traffic" << endl;
-    cout << left <<setw(43) << "\nAirport:" << setw(20) << "Number of Flights:" << endl;
-
-    int n = 0;
-    auto end = flightsAirport.end();
-    end--;
-    for (auto it = end; it != flightsAirport.begin(); it--) {
-        n++;
-        cout << left << n << "- " << setw(4)<< it->second << setw(35) << airportMap[it->second].name << setw(20) << it->first << endl;
-
-        if (n == k){ return;}
+    // Populate the priority queue with airports and their traffic
+    for (const auto& entry : flightsAirport) {
+        topAirports.push(std::make_pair(entry.second, entry.first));
     }
 
+    // Print the top k airports with greatest traffic
+    std::cout << "Top " << k << " airports with greatest traffic" << std::endl;
+    std::cout << std::left << std::setw(43) << "\nAirport:" << std::setw(20) << "Number of Flights:" << std::endl;
 
-
+    for (int i = 0; i < k && !topAirports.empty(); ++i) {
+        auto airport = topAirports.top();
+        topAirports.pop();
+        std::cout << std::setw(43) << airport.second << std::setw(20) << airport.first << std::endl;
+    }
 }
+
 
 // ix - 312
 bool inStack(Vertex<string>* w,stack<string> s);
