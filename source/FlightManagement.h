@@ -37,9 +37,9 @@ private:
     unordered_map<string, airport> airportMap;
     unordered_map<string, airline> airlineMap;
 
-    Graph<string> airNetwork;
 
 public:
+    Graph<string> airNetwork;
     FlightManagement();
     void addAirport(airport airport);
     void addAirline(airline airline);
@@ -88,7 +88,7 @@ public:
 
     /**Best Flight Option*/
     void bestFlightOption();
-    vector<vector<pair<string,string>>> bestFlightOption(const vector<Vertex<string>*> sourceVector, const vector<Vertex<string>*> targetVector, int maxAirlines, unordered_set<string> airlinesSet);
+    vector<vector<pair<string,string>>> bestFlightOption(const vector<Vertex<string>*> sourceVector, const vector<Vertex<string>*> targetVector, int maxAirlines, unordered_set<string> wantedAirlines);
     void bestFlightAirportName(const string sourceName, const string& targetName);
 
     void bestFlightCity(const string sourceName, const string& targetName);

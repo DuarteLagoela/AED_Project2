@@ -393,12 +393,48 @@ bool inStack(Vertex<string>* w,stack<string> s){
 }
 
 // 4. Best flight option
+bool filter(std::vector<std::pair<string, std::string>> path, int maxAirlines, unordered_set<string> wantedAirlines) {
+    // Track unique airlines for each itinerary
 
-vector<vector<pair<string,string>>> FlightManagement::bestFlightOption(const vector<Vertex<string>*> sourceVector, const vector<Vertex<string>*> targetVector, int maxAirlines, unordered_set<string> airlinesSet) {
+    unordered_set<string> airlines;
 
-    vector<vector<pair<string,string>>> final;
+    // Iterate through flights in the current path starting from the second flight (1st doesn't have an airline associated)
+    for (auto flight = path.begin() + 1; flight < path.end(); flight++) {
+        // Flag to track if the airline is found in the set of valid airlines
+        bool found = false;
+
+        // Insert the airline into the set for uniqueness
+        airlines.insert(flight->second);
+
+        // Check if the airline is in the set of valid airlines
+        for (const auto &validAirline: wantedAirlines) {
+            if (validAirline == flight->second) {
+                found = true;
+                break;
+            }
+        }
+
+        // If the first airline in the set is "ignore", do nothing
+        if (*wantedAirlines.begin() == "ignore") {
+            // Note: Consider adding a comment here to explain why nothing is done
+        }
+            // If the airline is not found in the set of valid airlines, skip the itinerary
+        else if (!found) {
+            return false;
+        }
+    }
+
+    // If the number of unique airlines exceeds the maximum allowed, skip the itinerary
+    if (airlines.size() > maxAirlines) {
+        return false;
+    }
+    return true;
+    // If the itinerary was not skipped, move to the next itinerary
+}
+
+vector<vector<pair<string,string>>> FlightManagement::bestFlightOption(const vector<Vertex<string>*> sourceVector, const vector<Vertex<string>*> targetVector, int maxAirlines, unordered_set<string> wantedAirlines) {
+
     vector<vector<pair<string,string>>> res;
-    vector<vector<pair<string,string>>> filtered;
 
     for(auto source : sourceVector){
         for (auto target : targetVector){
@@ -419,29 +455,31 @@ vector<vector<pair<string,string>>> FlightManagement::bestFlightOption(const vec
                 std::vector<std::pair<string, std::string>> rootPath = q.front();
                 q.pop();
 
-                auto prev = rootPath.back().first;
+                if(!res.empty() && rootPath.size() > res.front().size()){
+                    continue;
+                }
 
+                auto prev = rootPath.back().first;
                 for(auto e : airNetwork.findVertex(prev)->getAdj()){
                     auto w = e.getDest();
                     if(!w->isVisited()){
-                        std::vector<std::pair<std::string, std::string>> childPath = rootPath;
+                        vector<pair<string, string>> childPath = rootPath;
                         childPath.emplace_back(w->getInfo(), e.getAirlineCode());
-
                         if(w == target){
-                            if((res.empty() || childPath.size() <= res.front().size())  /*&& this->checkFilters(childPath, filter)*/){
+                            //w->setVisited(false);
+                            //if((res.empty() || childPath.size() <= res.front().size())){
                                 res.push_back(childPath);
-                            }
+                            //}
                             continue;
                         }
-
-                        std::vector<std::pair<string, std::string>> newPath = childPath;
-                        q.push(newPath);
-                        w->setVisited(true);
+                        q.push(childPath);
                     }
                 }
+                airNetwork.findVertex(prev)->setVisited(true);
             }
         }
     }
+/*
     int min = INT_MAX;
     for (auto x : res){
         if (x.size() < min) min = x.size();
@@ -450,22 +488,12 @@ vector<vector<pair<string,string>>> FlightManagement::bestFlightOption(const vec
     for (auto x : res){
         if (x.size() == min) final.push_back(x);
     }
-
-    // Filters
-    for (auto it = final.begin(); it != final.end(); it++){
-        unordered_set<string> airlines;
-        for (auto flight : *it){
-            bool found = false;
-            airlines.insert(flight.second);
-            for (auto airline : airlinesSet){
-                if (airline == flight.second) found = true;
-            }
-            if (*airlinesSet.begin() == "ignore") continue;
-            if (!found) final.erase(it);
-        }
-        if (airlines.size() > maxAirlines) final.erase(it);
+    */
+    for (auto path = res.begin(); path != res.end();){
+        if (!filter(*path,maxAirlines,wantedAirlines)) path = res.erase(path);
+        else path++;
     }
-    return final;
+    return res;
 }
 double toRadians(double degree) {
     return degree * (M_PI / 180.0);

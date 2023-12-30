@@ -8,4 +8,6 @@ add_executable(AED_Project2 main.cpp
         source/DataSetLoader.h
         source/FlightManagement.h
         source/FlightManagement.cpp
-        source/Graph.h)
+        source/Graph.h
+        source/Menu.h
+)
