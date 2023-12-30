@@ -4,11 +4,12 @@
 
 int main() {
     FlightManagement fm = FlightManagement();
+    Menu menu;
+    menu.mainMenu(fm);
     // FEN -> RRG 220 stops??
     // CPO -> LYB 413 ????
     // Low Traffic Airports for testing: CPO, LYB, GKA, CYB
-    Menu menu;
-    menu.mainMenu(fm);
+
     // long x = fm.nFlightsCity("Porto","Portugal");
     //std::cout << fm.essentialAirports().size();
     //fm.bestFlightOption();

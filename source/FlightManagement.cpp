@@ -202,13 +202,13 @@ int FlightManagement::reachableAirportsFromAirport(const string &airportCode) {
 
 // vi
 // Number of reachable airports from a given airport with X stops
-int FlightManagement::reachableAirportsInXStops(string source, int x) { // DONE
+void FlightManagement::reachableAirportsInXStops(string source, int x) { // DONE
     int res = 0;
     auto v = airNetwork.findVertex(source);
-    if (v == NULL) {
+    /*if (v == NULL) {
         cout << "Airport " << source << " doesn't exist" << endl;
         return -1;
-    };
+    };*/
     for (auto a : airNetwork.getVertexSet()) {
         a->setVisited(false);
     }
@@ -234,18 +234,18 @@ int FlightManagement::reachableAirportsInXStops(string source, int x) { // DONE
         }
         dist++;
     }
-    return res - 1;
-
+    auto airport = airportMap[source];
+    cout << "There are " << res - 1 << " reachable airports with " << x << " stops, from " << airport.name << " (" << airport.code << ") in " << airport.country << endl;
 }
 
 // Number of reachable cities from a given airport with X stops
-int FlightManagement::reachableCitiesInXStops(string source, int x) {
+void FlightManagement::reachableCitiesInXStops(string source, int x) {
     std::set<string> res;
     auto v = airNetwork.findVertex(source);
-    if (v == NULL){
+    /*if (v == NULL){
         cout << "Airport " << source << " doesn't exist" << endl;
         return -1;
-    }
+    }*/
     for (auto a : airNetwork.getVertexSet()) {
         a->setVisited(false);
     }
@@ -272,18 +272,19 @@ int FlightManagement::reachableCitiesInXStops(string source, int x) {
         }
         dist++;
     }
-    return (int) res.size() - 1;
+    auto airport = airportMap[source];
+    cout << "There are " << res.size() - 1 << " reachable airports with " << x << " stops, from " << airport.name << " (" << airport.code << ") in " << airport.country << endl;
 
 }
 
 // Number of reachable countries from a given airport with X stops
-int FlightManagement::reachableCountriesInXStops(string source, int x) {
+void FlightManagement::reachableCountriesInXStops(string source, int x) {
     std::set<string> res;
     auto v = airNetwork.findVertex(source);
-    if (v == NULL){
+    /*if (v == NULL){
         cout << "Airport " << source << " doesn't exist" << endl;
         return -1;
-    }
+    }*/
     for (auto a : airNetwork.getVertexSet()) {
         a->setVisited(false);
     }
@@ -310,7 +311,8 @@ int FlightManagement::reachableCountriesInXStops(string source, int x) {
         }
         dist++;
     }
-    return (int) res.size() - 1;
+    auto airport = airportMap[source];
+    cout << "There are " << res.size() - 1 << " reachable airports with " << x << " stops, from " << airport.name << " (" << airport.code << ") in " << airport.country << endl;
 }
 // viii
 #include <iostream>
@@ -368,7 +370,7 @@ void FlightManagement::topTrafficAirports(int k) {
 bool inStack(Vertex<string>* w,stack<string> s);
 void dfs_art(Graph<string> &g, Vertex<string> *v, stack<string> &s, unordered_set<string> &l, int &i);
 
-unordered_set<string> FlightManagement::essentialAirports() {
+void FlightManagement::essentialAirports() {
     unordered_set<string> res;
     stack<string> s;
     int i = 0;
@@ -380,7 +382,12 @@ unordered_set<string> FlightManagement::essentialAirports() {
             dfs_art(airNetwork, v, s, res, i);
         }
     }
-    return res;
+    int count = 1;
+    for (auto x : res){
+        auto airport = airportMap[x];
+        cout << count++ << ". " << airport.name << " (" << airport.code << ") in " << airport.city << ", " << airport.country << endl;
+    }
+    cout << "There are " << res.size() << " essential airports." << endl;
 }
 
 void dfs_art(Graph<string> &g, Vertex<string> *v, stack<string> &s, unordered_set<string> &l, int &i){
@@ -521,277 +528,6 @@ vector<vector<pair<string,string>>> FlightManagement::bestFlightOption(const vec
         else path++;
     }
     return res;
-}
-double toRadians(double degree) {
-    return degree * (M_PI / 180.0);
-}
-
-// Haversine distance calculation function
-double haversineDistance(double lat1, double lon1, double lat2, double lon2) {
-    // Radius of the Earth in kilometers
-    const double earthRadius = 6371.0;
-
-    // Convert latitude and longitude from degrees to radians
-    lat1 = toRadians(lat1);
-    lon1 = toRadians(lon1);
-    lat2 = toRadians(lat2);
-    lon2 = toRadians(lon2);
-
-    // Calculate differences
-    double dlat = lat2 - lat1;
-    double dlon = lon2 - lon1;
-
-    // Haversine formula
-    double a = sin(dlat / 2.0) * sin(dlat / 2.0) +
-               cos(lat1) * cos(lat2) * sin(dlon / 2.0) * sin(dlon / 2.0);
-    double c = 2.0 * atan2(sqrt(a), sqrt(1.0 - a));
-
-    // Calculate the distance
-    double distance = earthRadius * c;
-
-    return distance;
-}
-void FlightManagement::bestFlightOption(){
-    vector<Vertex<string>*> source;
-    vector<Vertex<string>*> target;
-    cout << "Select source by:" << endl <<
-        "1. Airport code" << endl <<
-        "2. Airport name" << endl <<
-        "3. City" << endl <<
-        "4. Coordinates" << endl;
-    int input;
-    cin >> input;
-
-    string a,b;
-    if (input == 1) {
-        cout << "Airport code:" << endl;
-        cin >> a;
-        auto s = airNetwork.findVertex(a);
-        if (s == NULL) {
-            cout << "Airport not found." << endl;
-            bestFlightOption();
-            return;
-        }
-        else source.push_back(s);
-    }
-    if (input == 2) {
-        cout << "Airport name:";
-        cin.ignore();
-        getline(cin, a);
-        string code = "";
-        for (auto x : airportMap){
-            if (x.second.name == a) {
-                code = x.second.code;
-            }
-        }
-        if (code == "") {
-            cout << "Airport not found." << endl;
-            bestFlightOption();
-            return;
-        }
-        else {
-            auto s = airNetwork.findVertex(code);
-            source.push_back(s);
-        }
-    }
-    if (input == 3) {
-        cout << "Country:";
-        cin.ignore();
-        getline(cin, a);
-        cout << "City:";
-        getline(cin, b);
-
-        bool found = false;
-        for (auto x : airportMap){
-            if (x.second.country == a && x.second.city == b) {
-                auto s = x.second.code;
-                source.push_back(airNetwork.findVertex(s));
-                found = true;
-            }
-        }
-        if (!found) {
-            cout << "Invalid city." << endl;
-            bestFlightOption();
-            return;
-        }
-    }
-    if (input == 4) {
-        double lat, lon;
-        while (true) {
-            cout << "Latitude:";
-            if (std::cin >> lat) {
-                break;
-            }
-            else {
-                std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                std::cout << "Invalid latitude." << std::endl;
-            }
-        }
-        while (true) {
-            cout << "Longitude:";
-            if (std::cin >> lon) {
-                break;
-            }
-            else {
-                std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                std::cout << "Invalid longitude." << std::endl;
-            }
-        }
-        double min = INT_MAX;
-        airport closest;
-        for (auto airport : airportMap){
-            double distance = haversineDistance(lat,lon,airport.second.latitude,airport.second.longitude);
-            if (distance < min){
-                min = distance;
-                closest = airport.second;
-            }
-        }
-        auto s = airNetwork.findVertex(closest.code);
-        cout << "Closest airport: " << closest.name << " (" << closest.code << ") in " << closest.city
-            << ", " <<  closest.country << endl;
-        source.push_back(s);
-    }
-
-    cout << "Select target by:" << endl <<
-         "1. Airport code" << endl <<
-         "2. Airport name" << endl <<
-         "3. City" << endl <<
-         "4. Coordinates" << endl;
-
-    cin >> input;
-
-    if (input == 1) {
-        cout << "Airport code:";
-        cin >> a;
-        auto s = airNetwork.findVertex(a);
-        if (s == NULL) {
-            cout << "Airport not found." << endl;
-            bestFlightOption();
-            return;
-        }
-        else target.push_back(s);
-    }
-    if (input == 2) {
-        cout << "Airport name:";
-        cin.ignore();
-        getline(cin, a);
-        string code = "";
-        for (auto x : airportMap){
-            if (x.second.name == a) {
-                code = x.second.code;
-            }
-        }
-        if (code == "") {
-            cout << "Airport not found." << endl;
-            bestFlightOption();
-            return;
-        }
-        else {
-            auto s = airNetwork.findVertex(code);
-            target.push_back(s);
-        }
-    }
-    if (input == 3) {
-        cout << "Country:";
-        cin.ignore();
-        getline(cin, a);
-        cout << "City:";
-        getline(cin, b);
-        bool found = false;
-        for (auto x : airportMap){
-            if (x.second.country == a && x.second.city == b) {
-                auto s = x.second.code;
-                target.push_back(airNetwork.findVertex(s));
-                found = true;
-            }
-        }
-        if (!found) {
-            cout << "Invalid city." << endl;
-            bestFlightOption();
-            return;
-        }
-    }
-    if (input == 4) {
-        double lat, lon;
-        while (true) {
-            cout << "Latitude:";
-            if (std::cin >> lat) {
-                break;
-            }
-            else {
-                std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                std::cout << "Invalid latitude." << std::endl;
-            }
-        }
-        while (true) {
-            cout << "Longitude:";
-            if (std::cin >> lon) {
-                break;
-            }
-            else {
-                std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                std::cout << "Invalid longitude." << std::endl;
-            }
-        }
-        double min = INT_MAX;
-        airport closest;
-        for (auto airport : airportMap){
-            double distance = haversineDistance(lat,lon,airport.second.latitude,airport.second.longitude);
-            if (distance < min){
-                min = distance;
-                closest = airport.second;
-            }
-        }
-        auto s = airNetwork.findVertex(closest.code);
-        cout << "Closest airport: " << closest.name << " (" << closest.code << ") in " << closest.city
-             << ", " <<  closest.country << endl;
-        target.push_back(s);
-    }
-
-    cout << "Would you like to specify which airlines to fly?(y/n)";
-    string x;
-    cin >> x;
-    unordered_set<string> airlines;
-    if (x == "y"){
-        while(true){
-            string airline;
-            cout << "New airline (insert 'q' to stop):";
-            cin >> airline;
-            if (airline == "q") break;
-            auto tomas = airlineMap.find(airline);
-            if (tomas == airlineMap.end()) cout << "Invalid airline" << endl;
-            else airlines.insert(tomas->first);
-        }
-    }
-    else airlines.insert("ignore");
-
-    cout << "Would you like to set a max number of different airlines?(y/n)";
-    cin >> x;
-    int maxAirlines = INT_MAX;
-    if (x == "y"){
-        cout << "Number of different airlines:";
-        cin >> maxAirlines;
-    }
-
-    auto ans = bestFlightOption(source,target, maxAirlines,airlines);
-    if (ans.empty()) cout << "There aren't any flights available.";
-    else {
-        int i = 1;
-        cout << "There are " << ans.size() << " flight options with " << ans[0].size() - 1 << " stops each:" << endl;
-        for (auto option: ans) {
-            cout << "Option " << i++ << ":" << endl;
-            for (int i = 1; i < option.size(); i++) {
-                cout << i << ". " << option[i - 1].first << " -> " << option[i].first << " via " << option[i].second
-                     << endl;
-            }
-            cout << endl;
-        }
-    }
-
 }
 
 int FlightManagement::nAirports() {

@@ -34,12 +34,13 @@ struct airline {
 
 class FlightManagement {
 private:
+    Graph<string> airNetwork;
     unordered_map<string, airport> airportMap;
     unordered_map<string, airline> airlineMap;
-
-
 public:
-    Graph<string> airNetwork;
+    Graph<string> getAirNetwork(){return airNetwork;}
+    unordered_map<string, airport> getAirportMap(){return airportMap;}
+    unordered_map<string, airline> getAirlineMap(){return airlineMap;}
     FlightManagement();
     void addAirport(airport airport);
     void addAirline(airline airline);
@@ -73,9 +74,9 @@ public:
 
 
     //vi
-    int reachableAirportsInXStops(string source, int x);
-    int reachableCitiesInXStops(string source, int x);
-    int reachableCountriesInXStops(string source, int x);
+    void reachableAirportsInXStops(string source, int x);
+    void reachableCitiesInXStops(string source, int x);
+    void reachableCountriesInXStops(string source, int x);
 
     //vii
     void maxTrip(const string& airportCode);
@@ -85,10 +86,9 @@ public:
     void topTrafficAirports(int k);
 
     //ix
-    unordered_set<string> essentialAirports();//articulation points
+    void essentialAirports();//articulation points
 
     /**Best Flight Option*/
-    void bestFlightOption();
     vector<vector<pair<string,string>>> bestFlightOption(const vector<Vertex<string>*> sourceVector, const vector<Vertex<string>*> targetVector, int maxAirlines, unordered_set<string> wantedAirlines);
     void bestFlightAirportName(const string sourceName, const string& targetName);
 
