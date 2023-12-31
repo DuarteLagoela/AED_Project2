@@ -58,7 +58,11 @@ int FlightManagement::nAvailableFlights() {
     return n;
 }
 // ii
-int FlightManagement::nFlightsFromAirport(const string& airportCode) {
+int FlightManagement::nFlightsFromAirport() {
+
+    string airportCode;
+    cout << "Airport code:";
+    cin >> airportCode;
 
     Vertex<string>* src_ptr = airNetwork.findVertex(airportCode);
     set<string> airlineSet;

@@ -80,10 +80,11 @@ void Menu::statistictsMenu(FlightManagement fm){
                     fm.nAvailableFlights();
                     break;
             }
+            break;
 
         case 2:
-
-
+            fm.nFlightsFromAirport();
+            break;
         case 3:
             cout << "1. Number of flights per city" << endl
                  << "2. Number of flights per airline" << endl
@@ -106,7 +107,46 @@ void Menu::statistictsMenu(FlightManagement fm){
             }
             break;
         case 4:
+            cout << "1. From airport" << endl
+                 << "2. From city" << endl
+                 << "0. Quit" << endl;
+
+            while (!(cin >> input2) || input2 < 0 || input2 > 2) {
+                invalidInputHandler({0, 1}, 2);
+            }
+
+            switch (input2) {
+                case 0:
+                    statistictsMenu(fm);
+                    break;
+                case 1:
+                    fm.nCountriesFromAirport();
+                    break;
+                case 2:
+                    fm.nCountriesFromCity();
+                    break;
+            }
+            break;
         case 5:
+            cout << "1. Airports" << endl
+                 << "2. Cities" << endl
+                 << "0. Countries" << endl;
+
+            while (!(cin >> input2) || input2 < 0 || input2 > 2) {
+                invalidInputHandler({0, 1}, 2);
+            }
+
+            switch (input2) {
+                case 0:
+                    statistictsMenu(fm);
+                    break;
+                case 1:
+
+                    break;
+                case 2:
+                    fm.nCountriesFromCity();
+                    break;
+            }break;
         case 6:{
             cout << "1. Reachable airports" << endl
                  << "2. Reachable cities" << endl
