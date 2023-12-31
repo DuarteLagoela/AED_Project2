@@ -131,7 +131,14 @@ void Menu::statistictsMenu(FlightManagement fm){
             }
             break;}
         case 7:
-        case 8:
+            fm.maxTrip();
+            break;
+        case 8:{
+            int k = 0;
+            cout << "k: ";
+            cin >> k;
+            fm.topTrafficAirports(k);
+        }break;
         case 9:
             fm.essentialAirports();
             break;

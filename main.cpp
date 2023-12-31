@@ -4,8 +4,8 @@
 
 int main() {
     FlightManagement fm = FlightManagement();
-    //Menu menu;
-    //menu.mainMenu(fm);
+    Menu menu;
+    menu.mainMenu(fm);
 
 
     // FEN -> RRG 220 stops??
@@ -19,7 +19,7 @@ int main() {
     std::cout << "Breakpoint here" << endl;
 
 
-    fm.maxTrip();
+
 
 
     return 0;
