@@ -61,7 +61,29 @@ void Menu::statistictsMenu(FlightManagement fm){
             mainMenu(fm);
             break;
         case 1:
+            cout << "1. Number of airports" << endl
+                 << "2. Number of flights" << endl
+                 << "0. Quit" << endl;
+
+            while (!(cin >> input2) || input2 < 0 || input2 > 2) {
+                invalidInputHandler({0, 1}, 2);
+            }
+
+            switch (input2) {
+                case 0:
+                    statistictsMenu(fm);
+                    break;
+                case 1:
+                    fm.nAirports();
+                    break;
+                case 2:
+                    fm.nAvailableFlights();
+                    break;
+            }
+
         case 2:
+
+
         case 3:
             cout << "1. Number of flights per city" << endl
                  << "2. Number of flights per airline" << endl
