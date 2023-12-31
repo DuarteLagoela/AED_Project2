@@ -39,7 +39,7 @@ private:
     unordered_map<string, airline> airlineMap;
 public:
     Graph<string> getAirNetwork(){return airNetwork;}
-    unordered_map<string, airport> getAirportMap(){return airportMap;}
+    unordered_map<string, airport> &getAirportMap(){return airportMap;}
     unordered_map<string, airline> &getAirlineMap(){return airlineMap;}
     FlightManagement();
     void addAirport(airport airport);
