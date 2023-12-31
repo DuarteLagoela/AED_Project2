@@ -8,6 +8,7 @@
 
 #include <limits>
 #include <cmath>
+#include <climits>
 
 class Menu {
 public:
@@ -103,7 +104,7 @@ void Menu::statistictsMenu(FlightManagement fm){
                     cout << endl;
                     if (fm.getAirNetwork().findVertex(source) == NULL) {
                         cout << "Invalid airport. Please insert a valid airport code:";
-                        invalidInputHandler({},NULL);
+                        invalidInputHandler({},0);
                     }
                     else break;
                 }
@@ -193,7 +194,7 @@ void Menu::bestFlightMenu(FlightManagement fm){
                 auto airport = fm.getAirNetwork().findVertex(a);
                 if (airport == NULL) {
                     cout << "Invalid airport. Please insert a valid airport code:";
-                    invalidInputHandler({},NULL);
+                    invalidInputHandler({},0);
                 }
                 else {
                     source.push_back(airport);
@@ -215,7 +216,7 @@ void Menu::bestFlightMenu(FlightManagement fm){
                 }
                 if (code == "") {
                     cout << "Airport not found. Please enter a valid airport name:";
-                    invalidInputHandler({},NULL);
+                    invalidInputHandler({},0);
                 }
                 else {
                     auto s = fm.getAirNetwork().findVertex(code);
@@ -250,7 +251,7 @@ void Menu::bestFlightMenu(FlightManagement fm){
                     }
                 }
                 cout << "Invalid city. Please enter a valid city:" << endl;
-                invalidInputHandler({},NULL);
+                invalidInputHandler({},0);
             }
         }
         else if (input == 4) {
@@ -424,7 +425,7 @@ void Menu::bestFlightMenu(FlightManagement fm){
 }
 
 void Menu::invalidInputHandler(vector<int> inputs, int last){
-    if (last != NULL) {
+    if (last != 0) {
         cout << "Invalid input. Accepted inputs: ";
         for (int x: inputs) {
             cout << x << ", ";

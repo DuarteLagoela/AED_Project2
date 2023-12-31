@@ -79,8 +79,8 @@ public:
     void reachableCountriesInXStops(string source, int x);
 
     //vii
-    void maxTrip(const string& airportCode);
-    void dfsMaxTrip(Vertex<string>* currentAirport, vector<string>& currentPath, vector<pair<string, string>>& maxTripPairs, int& maxStops);
+    void maxTrip();
+
 
     //viii
     void topTrafficAirports(int k);

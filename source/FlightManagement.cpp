@@ -314,13 +314,86 @@ void FlightManagement::reachableCountriesInXStops(string source, int x) {
     auto airport = airportMap[source];
     cout << "There are " << res.size() - 1 << " reachable airports with " << x << " stops, from " << airport.name << " (" << airport.code << ") in " << airport.country << endl;
 }
+//vii
+void FlightManagement::maxTrip() {
+
+    // Initialize the result vector to store the longest of the shortest paths.
+    std::vector<pair<string, string>> longestShortestPaths;
+
+    int max = 0;
+
+    for (auto source : airNetwork.getVertexSet()) {
+
+        for ( auto source : airNetwork.getVertexSet()) {
+            source->setVisited(false);
+        }
+        // Run BFS from the current source node.
+        std::queue<Vertex<string>*> bfsQueue;
+        bfsQueue.push(source);
+        source->setVisited(true);
+
+        // Data structures to store the current shortest path and its length.
+        std::vector<std::string> currentShortestPath;
+        int currentShortestPathLength = -1;
+        vector<string> furthestDestinations;
+
+        // Process layers in BFS.
+        while (!bfsQueue.empty()) {
+            int layerSize = bfsQueue.size();
+            furthestDestinations.clear();
+            for (int i = 0; i < layerSize; ++i) {
+                Vertex<string>* currentVertex = bfsQueue.front();
+                bfsQueue.pop();
+                furthestDestinations.push_back(currentVertex->getInfo());
+
+                for (auto neighborEdge : currentVertex->getAdj()) {
+                    Vertex<string>* neighbor = neighborEdge.getDest();
+
+
+                    if (!neighbor->isVisited()) {
+                        bfsQueue.push(neighbor);
+                        neighbor->setVisited(true);
+                    }
+                }
+
+            }
+
+            // Increment the length when starting to visit the next layer.
+            ++currentShortestPathLength;
+        }
+
+        if (currentShortestPathLength > max) {
+            max = currentShortestPathLength;
+            longestShortestPaths.clear();
+            for (auto i : furthestDestinations) {
+                longestShortestPaths.push_back({source->getInfo(), i});
+
+            }
+
+        }
+        else if (currentShortestPathLength == max){
+            for (auto i : furthestDestinations) {
+                longestShortestPaths.push_back({source->getInfo(), i});
+
+            }
+        }
+
+    }
+
+    cout << left << setw(50) << "Source:" << setw(50) << "Destination:" << endl;
+    for (auto p : longestShortestPaths) {
+        cout << left << setw(50) <<  airportMap[p.first].name << setw(50) << airportMap[p.second].name << endl;
+    }
+
+    cout << "The maximum trips possible have a max of " << max << " stops." << endl;
+
+
+}
 // viii
-#include <iostream>
-#include <iomanip>
 #include <unordered_map>
 #include <queue>
 
-// Assuming FlightManagement class has a member variable airNetwork of type AirNetwork
+
 
 void FlightManagement::topTrafficAirports(int k) {
     std::unordered_map<std::string, unsigned int> flightsAirport;
@@ -603,56 +676,7 @@ int FlightManagement::nCountriesFromCity() {
 }
 
 
-    void FlightManagement::maxTrip(const std::string &airportCode) {
-        Vertex<string>* sourceAirport = airNetwork.findVertex(airportCode);
 
-        if (sourceAirport == nullptr) {
-            cout << "Airport not found!" << endl;
-            return;
-        }
-
-        vector<string> currentPath;
-        vector<pair<string, string>> maxTripPairs;
-        int maxStops = 0;
-
-        for (auto v : airNetwork.getVertexSet()) {
-            v->setVisited(false);
-        }
-
-        dfsMaxTrip(sourceAirport, currentPath, maxTripPairs, maxStops);
-
-        if (maxStops == 0) {
-            cout << "No trips found from the airport " << airportCode << "." << endl;
-        } else {
-            cout << "Maximum trip with " << maxStops << " stops from the airport " << airportCode << ":" << endl;
-            for (const auto& pair : maxTripPairs) {
-                cout << pair.first << " -> " << pair.second << endl;
-            }
-        }
-    }
-
-void FlightManagement::dfsMaxTrip(Vertex<string>* currentAirport, vector<string>& currentPath, vector<pair<string, string>>& maxTripPairs, int& maxStops) {
-    currentAirport->setVisited(true);
-    currentPath.push_back(currentAirport->getInfo());
-
-    if (currentPath.size() > maxStops) {
-        maxStops = currentPath.size() - 1;
-        maxTripPairs.clear();
-        for (size_t i = 0; i < currentPath.size() - 1; ++i) {
-            maxTripPairs.push_back({currentPath[i], currentPath[i + 1]});
-        }
-    }
-
-    for (auto& edge : currentAirport->getAdj()) {
-        Vertex<string>* destAirport = edge.getDest();
-        if (!destAirport->isVisited()) {
-            dfsMaxTrip(destAirport, currentPath, maxTripPairs, maxStops);
-        }
-    }
-
-    currentPath.pop_back();
-    currentAirport->setVisited(false);
-}
 
 
 

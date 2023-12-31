@@ -4,8 +4,10 @@
 
 int main() {
     FlightManagement fm = FlightManagement();
-    Menu menu;
-    menu.mainMenu(fm);
+    //Menu menu;
+    //menu.mainMenu(fm);
+
+
     // FEN -> RRG 220 stops??
     // CPO -> LYB 413 ????
     // Low Traffic Airports for testing: CPO, LYB, GKA, CYB
@@ -15,6 +17,9 @@ int main() {
     //fm.bestFlightOption();
     // auto aYO = fm.essentialAirports().size();
     std::cout << "Breakpoint here" << endl;
+
+
+    fm.maxTrip();
 
 
     return 0;
