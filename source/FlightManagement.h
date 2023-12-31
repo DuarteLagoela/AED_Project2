@@ -68,9 +68,9 @@ public:
 
     //v
 
-    int reachableCountriesFromAirport(const string& airportCode);
-    int reachableCitiesFromAirport(const string& airportCode);
-    int reachableAirportsFromAirport(const string& airportCode);
+    int reachableCountriesFromAirport();
+    int reachableCitiesFromAirport();
+    int reachableAirportsFromAirport();
 
 
     //vi

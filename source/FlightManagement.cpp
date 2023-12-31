@@ -124,7 +124,10 @@ void FlightManagement::nFlightsAirline() {
 }
 
 // v
-int FlightManagement::reachableCountriesFromAirport(const string& airportCode) {
+int FlightManagement::reachableCountriesFromAirport() {
+    string airportCode;
+    cout << "Airport code:";
+    cin >> airportCode;
     Vertex<string>* src_airport= airNetwork.findVertex(airportCode);
 
     if (!src_airport) {
@@ -150,7 +153,10 @@ int FlightManagement::reachableCountriesFromAirport(const string& airportCode) {
     return nCountries;
 }
 
-int FlightManagement::reachableCitiesFromAirport(const string &airportCode) {
+int FlightManagement::reachableCitiesFromAirport() {
+    string airportCode;
+    cout << "Airport code:";
+    cin >> airportCode;
     Vertex<string>* src_airport= airNetwork.findVertex(airportCode);
 
     if (!src_airport) {
@@ -177,8 +183,11 @@ int FlightManagement::reachableCitiesFromAirport(const string &airportCode) {
 
 }
 
-int FlightManagement::reachableAirportsFromAirport(const string &airportCode) {
+int FlightManagement::reachableAirportsFromAirport() {
 
+    string airportCode;
+    cout << "Airport code:";
+    cin >> airportCode;
     Vertex<string>* src_airport= airNetwork.findVertex(airportCode);
 
     if (!src_airport) {
@@ -609,7 +618,7 @@ vector<vector<pair<string,string>>> FlightManagement::bestFlightOption(const vec
 }
 
 int FlightManagement::nAirports() {
-    cout<<"There are "<<airportMap.size()<<" airports.";
+    cout<<"There are "<<airportMap.size()<<" airports." << endl;
     return airportMap.size();
 }
 
@@ -618,7 +627,7 @@ int FlightManagement::nAvailableFlights() {
     for(auto vertex : airNetwork.getVertexSet()){
         n+=vertex->getAdj().size();
     }
-    cout<<"There are "<<n<<" available flights.";
+    cout<<"There are "<<n<<" available flights." << endl;
     return n;
 }
 

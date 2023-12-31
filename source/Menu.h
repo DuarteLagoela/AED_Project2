@@ -130,9 +130,10 @@ void Menu::statistictsMenu(FlightManagement fm){
         case 5:
             cout << "1. Airports" << endl
                  << "2. Cities" << endl
-                 << "0. Countries" << endl;
+                 << "3. Countries"<< endl
+                 << "0. Quit" << endl;
 
-            while (!(cin >> input2) || input2 < 0 || input2 > 2) {
+            while (!(cin >> input2) || input2 < 0 || input2 > 3) {
                 invalidInputHandler({0, 1}, 2);
             }
 
@@ -141,10 +142,13 @@ void Menu::statistictsMenu(FlightManagement fm){
                     statistictsMenu(fm);
                     break;
                 case 1:
-
+                    fm.reachableAirportsFromAirport();
                     break;
                 case 2:
-                    fm.nCountriesFromCity();
+                    fm.reachableCitiesFromAirport();
+                    break;
+                case 3:
+                    fm.reachableCountriesFromAirport();
                     break;
             }break;
         case 6:{
