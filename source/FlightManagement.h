@@ -16,27 +16,27 @@ using namespace std;
 
 
 struct airport {
-    string code;
-    string name;
-    string city;
-    string country;
-    double latitude;
-    double longitude;
+    string code;/**@param code**/
+    string name;/**@param name**/
+    string city;/**@param city**/
+    string country;/**@param country**/
+    double latitude;/**@param latitude**/
+    double longitude;/**@param longitude**/
 
 };
 
 struct airline {
-    string code;
-    string name;
-    string callsign;
-    string country;
+    string code;/**@param code**/
+    string name;/**@param name**/
+    string callsign;/**@param callsign**/
+    string country;/**@param country**/
 };
 
 class FlightManagement {
 private:
-    Graph<string> airNetwork;
-    unordered_map<string, airport> airportMap;
-    unordered_map<string, airline> airlineMap;
+    Graph<string> airNetwork;/**@param airNetwork**/
+    unordered_map<string, airport> airportMap;/**@param airportMap**/
+    unordered_map<string, airline> airlineMap;/**@param airlineMap**/
 public:
     Graph<string> getAirNetwork(){return airNetwork;}
     unordered_map<string, airport> &getAirportMap(){return airportMap;}
@@ -51,50 +51,51 @@ public:
     //Modify return type and parameters as needed
 
     //i
-    int nAirports();
-    int nAvailableFlights();
+    int nAirports();/**@return Total number of airports**/
+    int nAvailableFlights();/**@return Total number of flights**/
 
     //ii
-    int nFlightsFromAirport(Vertex<string>* src_ptr); //n flights and different companies
+    int nFlightsFromAirport(Vertex<string>* src_ptr); /**@return Number of flights out of an airport and from how many different airlines**///n flights and different companies
 
     //iii
-    void nFlightsCity();
-    void nFlightsAirline();
+    void nFlightsCity();/**@brief Number of flights per city**/
+    void nFlightsAirline();/**@brief Number of flights per airline**/
 
     //iv
     //In one flight
-    int nCountriesFromAirport(Vertex<string>* src_ptr);
-    int nCountriesFromCity(string city, string country);
+    int nCountriesFromAirport(Vertex<string>* src_ptr);/**@return Number of different countries that a given airport flies to**/
+    int nCountriesFromCity(string city, string country);/**@return Number of different countries that a given city flies to**/
 
     //v
 
-    int reachableCountriesFromAirport(Vertex<string>* src_airport);
-    int reachableCitiesFromAirport(Vertex<string>* src_airport);
-    int reachableAirportsFromAirport(Vertex<string>* src_airport);
+    int reachableCountriesFromAirport(Vertex<string>* src_airport);/**@return Number of countries available for a given airport**/
+    int reachableCitiesFromAirport(Vertex<string>* src_airport);/**@return Number of cities available for a given airport**/
+    int reachableAirportsFromAirport(Vertex<string>* src_airport);/**@return Number of airports available for a given airport**/
 
 
     //vi
-    void reachableAirportsInXStops(string source, int x);
-    void reachableCitiesInXStops(string source, int x);
-    void reachableCountriesInXStops(string source, int x);
+    void reachableAirportsInXStops(string source, int x);/**@brief Number of reachable airports from a given airport and a maximum number of stops**/
+    void reachableCitiesInXStops(string source, int x);/**@brief Number of reachable cities from a given airport and a maximum number of stops**/
+    void reachableCountriesInXStops(string source, int x);/**@brief Number of reachable countries from a given airport and a maximum number of stops**/
 
     //vii
-    void maxTrip();
+    void maxTrip();/**@brief Trips with the most amount of stops and the corresponding pair (source/destination) **/
 
 
     //viii
-    void topTrafficAirports(int k);
+    void topTrafficAirports(int k);/**@brief Top-k airports with the greatest number of flights**/
 
     //ix
-    void essentialAirports();//articulation points
+    void essentialAirports();/**@brief Airports that are essential to the network's circulation capability**///articulation points
 
     /**Best Flight Option*/
-    vector<vector<pair<string,string>>> bestFlightOption(const vector<Vertex<string>*> sourceVector, const vector<Vertex<string>*> targetVector, int maxAirlines, unordered_set<string> wantedAirlines);
-    void bestFlightAirportName(const string sourceName, const string& targetName);
+    vector<vector<pair<string,string>>> bestFlightOption(const vector<Vertex<string>*> sourceVector, const vector<Vertex<string>*> targetVector, int maxAirlines, unordered_set<string> wantedAirlines);/**@brief Filtered best flight options**/
 
-    void bestFlightCity(const string sourceName, const string& targetName);
+    void bestFlightAirportName(const string sourceName, const string& targetName);/**@brief The best trip option within a given airport**/
 
-    void bestFlightGeographical();
+    void bestFlightCity(const string sourceName, const string& targetName);/**@brief The best trip option within a given city**/
+
+    void bestFlightGeographical();/**@brief The best trip option close to a given location**/
 
     //Combinations of these
 

@@ -239,7 +239,7 @@ int FlightManagement::reachableAirportsFromAirport(Vertex<string>* src_airport) 
 
 // vi
 // Number of reachable airports from a given airport with X stops
-void FlightManagement::reachableAirportsInXStops(string source, int x) { // DONE
+void FlightManagement::reachableAirportsInXStops(string source, int x) { /**@brief Time complexity:O(V+E) where V and E are the number of vertices and edges,respectively**/
     int res = 0;
     auto v = airNetwork.findVertex(source);
     /*if (v == NULL) {
@@ -352,7 +352,7 @@ void FlightManagement::reachableCountriesInXStops(string source, int x) {
     cout << "There are " << res.size() - 1 << " reachable countries with " << x << " stops, from " << airport.name << " (" << airport.code << ") in " << airport.country << endl;
 }
 //vii
-void FlightManagement::maxTrip() {
+void FlightManagement::maxTrip() { /**@brief Time complexity: O(V.(V+E)) where V and E are the number of vertices and edges,respectively **/
 
     // Initialize the result vector to store the longest of the shortest paths.
     std::vector<pair<string, string>> longestShortestPaths;
@@ -431,7 +431,7 @@ void FlightManagement::maxTrip() {
 
 
 
-void FlightManagement::topTrafficAirports(int k) {
+void FlightManagement::topTrafficAirports(int k) { /**@brief Time complexity: O(V + E + k log(N)) where V and E are the number of vertices and edges,respectively and k the given variable**/
     std::unordered_map<std::string, unsigned int> flightsAirport;
 
     // Priority queue to store the top airports based on traffic
@@ -575,7 +575,7 @@ bool filter(std::vector<std::pair<string, std::string>> path, int maxAirlines, u
     // If the itinerary was not skipped, move to the next itinerary
 }
 
-vector<vector<pair<string,string>>> FlightManagement::bestFlightOption(const vector<Vertex<string>*> sourceVector, const vector<Vertex<string>*> targetVector, int maxAirlines, unordered_set<string> wantedAirlines) {
+vector<vector<pair<string,string>>> FlightManagement::bestFlightOption(const vector<Vertex<string>*> sourceVector, const vector<Vertex<string>*> targetVector, int maxAirlines, unordered_set<string> wantedAirlines) { /**@brief Time complexity: O(S.T.(V+E)) where V, E, S and T are the number of vertices, edges, source vertices and target vertices, respectively**/
 
     vector<vector<pair<string,string>>> res;
 
