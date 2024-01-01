@@ -42,21 +42,26 @@ void FlightManagement::addFlight(string sourceCode, string targetCode, string ai
 }
 
 // 3. Statistics of the network
+// i
+int FlightManagement::nAirports() {
+    cout<<"There are "<<airportMap.size()<<" airports." << endl;
+    return airportMap.size();
+}
+
+int FlightManagement::nAvailableFlights() {
+    int n=0;
+    for(auto vertex : airNetwork.getVertexSet()){
+        n+=vertex->getAdj().size();
+    }
+    cout<<"There are "<<n<<" available flights." << endl;
+    return n;
+}
+
 // ii
-int FlightManagement::nFlightsFromAirport() {
+int FlightManagement::nFlightsFromAirport(Vertex<string>* src_ptr) {
 
-    string airportCode;
-    cout << "Airport code:";
-    cin >> airportCode;
-
-    Vertex<string>* src_ptr = airNetwork.findVertex(airportCode);
     set<string> airlineSet;
     int res = 0;
-    if (!src_ptr){
-        cout << "Invalid airport code.";
-        return 0;
-    }
-
 
     cout << left << setw(54) << "Destination:" << setw(10) << "Airline:" << endl;
 
@@ -123,17 +128,56 @@ void FlightManagement::nFlightsAirline() {
     }
 }
 
-// v
-int FlightManagement::reachableCountriesFromAirport() {
-    string airportCode;
-    cout << "Airport code:";
-    cin >> airportCode;
-    Vertex<string>* src_airport= airNetwork.findVertex(airportCode);
+// iv
+int FlightManagement::nCountriesFromAirport(Vertex<string>* sourceAirport) {
+    int res = 0;
 
-    if (!src_airport) {
-        cout << "Invalid airport" << endl;
+    if (sourceAirport == nullptr) {
+        cout << "Airport not found!" << endl;
         return 0;
     }
+
+    unordered_set<string> visitedCountries;
+
+    for (const Edge<string>& edge : sourceAirport->getAdj()) {
+        Vertex<string>* destAirport = edge.getDest();
+        string destCountry = airportMap[destAirport->getInfo()].country;
+
+        if (destCountry != airportMap[sourceAirport->getInfo()].country &&
+            visitedCountries.find(destCountry) == visitedCountries.end()) {
+            visitedCountries.insert(destCountry);
+            res++;
+        }
+    }
+
+    cout << "From the airport " << airportMap[sourceAirport->getInfo()].name << " you can reach " << res << " countries." << endl;
+
+    return res;
+}
+
+int FlightManagement::nCountriesFromCity(string city, string country) {
+    int res = 0;
+    unordered_set<string> visitedCountries;
+
+    for(auto v : airNetwork.getVertexSet()){
+        if(airportMap[v->getInfo()].city==city && airportMap[v->getInfo()].country == country){
+            for(auto edge : v->getAdj()){
+                Vertex<string>* destAirport = edge.getDest();
+                string destCountry = airportMap[destAirport->getInfo()].country;
+
+                if (destCountry != airportMap[v->getInfo()].country &&
+                    visitedCountries.find(destCountry) == visitedCountries.end()) {
+                    visitedCountries.insert(destCountry);
+                    res++;
+                }
+            }
+        }}
+    cout << "From the city " << city << " you can reach " << res << " countries." << endl;
+    return res;
+}
+
+// v
+int FlightManagement::reachableCountriesFromAirport(Vertex<string>* src_airport) {
 
     set<string> countrySet;
 
@@ -149,21 +193,11 @@ int FlightManagement::reachableCountriesFromAirport() {
 
     int nCountries = countrySet.size();
 
-    cout << "You can travel to " << nCountries << " different countries departing from the " << airportMap[airportCode].name << " airport." << endl;
+    cout << "You can travel to " << nCountries << " different countries departing from the " << airportMap[src_airport->getInfo()].name << " airport." << endl;
     return nCountries;
 }
 
-int FlightManagement::reachableCitiesFromAirport() {
-    string airportCode;
-    cout << "Airport code:";
-    cin >> airportCode;
-    Vertex<string>* src_airport= airNetwork.findVertex(airportCode);
-
-    if (!src_airport) {
-        cout << "Invalid airport" << endl;
-        return 0;
-    }
-
+int FlightManagement::reachableCitiesFromAirport(Vertex<string>* src_airport) {
     set<string> citySet;
 
     for (auto e : src_airport->getAdj()) {
@@ -178,22 +212,12 @@ int FlightManagement::reachableCitiesFromAirport() {
 
     int nCities = citySet.size();
 
-    cout << "You can travel to " << nCities << " different cities departing from the " << airportMap[airportCode].name << " airport." << endl;
+    cout << "You can travel to " << nCities << " different cities departing from the " << airportMap[src_airport->getInfo()].name << " airport." << endl;
     return nCities;
 
 }
 
-int FlightManagement::reachableAirportsFromAirport() {
-
-    string airportCode;
-    cout << "Airport code:";
-    cin >> airportCode;
-    Vertex<string>* src_airport= airNetwork.findVertex(airportCode);
-
-    if (!src_airport) {
-        cout << "Invalid airport" << endl;
-        return 0;
-    }
+int FlightManagement::reachableAirportsFromAirport(Vertex<string>* src_airport) {
 
     set<string> airportSet;
 
@@ -209,7 +233,7 @@ int FlightManagement::reachableAirportsFromAirport() {
 
     int nAirports = airportSet.size();
 
-    cout << "You can travel to " << nAirports << " different airports departing from the " << airportMap[airportCode].name << " airport." << endl;
+    cout << "You can travel to " << nAirports << " different airports departing from the " << airportMap[src_airport->getInfo()].name << " airport." << endl;
     return nAirports;
 }
 
@@ -286,7 +310,7 @@ void FlightManagement::reachableCitiesInXStops(string source, int x) {
         dist++;
     }
     auto airport = airportMap[source];
-    cout << "There are " << res.size() - 1 << " reachable airports with " << x << " stops, from " << airport.name << " (" << airport.code << ") in " << airport.country << endl;
+    cout << "There are " << res.size() - 1 << " reachable cities with " << x << " stops, from " << airport.name << " (" << airport.code << ") in " << airport.country << endl;
 
 }
 
@@ -325,7 +349,7 @@ void FlightManagement::reachableCountriesInXStops(string source, int x) {
         dist++;
     }
     auto airport = airportMap[source];
-    cout << "There are " << res.size() - 1 << " reachable airports with " << x << " stops, from " << airport.name << " (" << airport.code << ") in " << airport.country << endl;
+    cout << "There are " << res.size() - 1 << " reachable countries with " << x << " stops, from " << airport.name << " (" << airport.code << ") in " << airport.country << endl;
 }
 //vii
 void FlightManagement::maxTrip() {
@@ -398,8 +422,7 @@ void FlightManagement::maxTrip() {
         cout << left << setw(50) <<  airportMap[p.first].name << setw(50) << airportMap[p.second].name << endl;
     }
 
-    cout << "The maximum trips possible have a max of " << max << " stops." << endl;
-
+    cout << "The maximum trips possible have at most " << max << " stops." << endl;
 
 }
 // viii
@@ -447,7 +470,7 @@ void FlightManagement::topTrafficAirports(int k) {
     for (int i = 0; i < k && !topAirports.empty(); ++i) {
         auto airport = topAirports.top();
         topAirports.pop();
-        std::cout << std::setw(43) << airport.second << std::setw(20) << airport.first << std::endl;
+        std::cout << i+1 << ". " << std::setw(43) << airport.second << std::setw(20) << airport.first << std::endl;
     }
 }
 
@@ -617,77 +640,6 @@ vector<vector<pair<string,string>>> FlightManagement::bestFlightOption(const vec
     return res;
 }
 
-int FlightManagement::nAirports() {
-    cout<<"There are "<<airportMap.size()<<" airports." << endl;
-    return airportMap.size();
-}
-
-int FlightManagement::nAvailableFlights() {
-    int n=0;
-    for(auto vertex : airNetwork.getVertexSet()){
-        n+=vertex->getAdj().size();
-    }
-    cout<<"There are "<<n<<" available flights." << endl;
-    return n;
-}
-
-int FlightManagement::nCountriesFromAirport() {
-    int res = 0;
-    string airportCode;
-
-    cout << "Please insert the desired Airport Code: ";
-    cin >> airportCode;
-
-    Vertex<string>* sourceAirport = airNetwork.findVertex(airportCode);
-
-    if (sourceAirport == nullptr) {
-        cout << "Airport not found!" << endl;
-        return 0;
-    }
-
-    unordered_set<string> visitedCountries;
-
-    for (const Edge<string>& edge : sourceAirport->getAdj()) {
-        Vertex<string>* destAirport = edge.getDest();
-        string destCountry = airportMap[destAirport->getInfo()].country;
-
-        if (destCountry != airportMap[airportCode].country &&
-            visitedCountries.find(destCountry) == visitedCountries.end()) {
-            visitedCountries.insert(destCountry);
-            res++;
-        }
-    }
-
-    cout << "From the airport " << airportMap[airportCode].name << " you can reach " << res << " countries!" << endl;
-
-    return res;
-}
-
-int FlightManagement::nCountriesFromCity() {
-    int res = 0;
-    string city;
-    unordered_set<string> visitedCountries;
-    cout << "Please insert the desired city: ";
-    cin >> city;
-
-
-    for(auto v : airNetwork.getVertexSet()){
-        if(airportMap[v->getInfo()].city==city){
-            for(auto edge : v->getAdj()){
-                Vertex<string>* destAirport = edge.getDest();
-                string destCountry = airportMap[destAirport->getInfo()].country;
-
-                if (destCountry != airportMap[v->getInfo()].country &&
-                    visitedCountries.find(destCountry) == visitedCountries.end()) {
-                    visitedCountries.insert(destCountry);
-                    res++;
-                }
-            }
-        }}
-    cout << "From the city " << city << " you can reach " << res << " countries!" << endl;
-    return res;
-
-}
 
 
 

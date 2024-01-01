@@ -55,7 +55,7 @@ public:
     int nAvailableFlights();
 
     //ii
-    int nFlightsFromAirport(); //n flights and different companies
+    int nFlightsFromAirport(Vertex<string>* src_ptr); //n flights and different companies
 
     //iii
     void nFlightsCity();
@@ -63,14 +63,14 @@ public:
 
     //iv
     //In one flight
-    int nCountriesFromAirport();
-    int nCountriesFromCity();
+    int nCountriesFromAirport(Vertex<string>* src_ptr);
+    int nCountriesFromCity(string city, string country);
 
     //v
 
-    int reachableCountriesFromAirport();
-    int reachableCitiesFromAirport();
-    int reachableAirportsFromAirport();
+    int reachableCountriesFromAirport(Vertex<string>* src_airport);
+    int reachableCitiesFromAirport(Vertex<string>* src_airport);
+    int reachableAirportsFromAirport(Vertex<string>* src_airport);
 
 
     //vi
