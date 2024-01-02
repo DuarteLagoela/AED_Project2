@@ -13,11 +13,14 @@ class FlightManagement;
 class DataSetLoader {
 
 public:
-    DataSetLoader() = default;
     /**@brief Data parsers**/
-    void airportLoader(const string& airports_csv, FlightManagement& fm);/**@param airports_csv Path for airports data**/
-    void airlineLoader(const string& airlines_csv, FlightManagement& fm);/**@param airlines_csv Path for airlines data**/
-    void flightsLoader(const string& flights_csv, FlightManagement& fm);/**@param flights_csv Path for flights data**/
+    DataSetLoader() = default;
+    /**@param airports_csv Path for airports data**/
+    void airportLoader(const string& airports_csv, FlightManagement& fm);
+    /**@param airlines_csv Path for airlines data**/
+    void airlineLoader(const string& airlines_csv, FlightManagement& fm);
+    /**@param flights_csv Path for flights data**/
+    void flightsLoader(const string& flights_csv, FlightManagement& fm);
 
 };
 
