@@ -374,10 +374,10 @@ void Menu::sourceTargetOptions(FlightManagement fm, vector<Vertex<string>*> &vec
         << "2. Airport Name" << endl
         << "3. City" << endl
         << "4. Coordinates" << endl
-        << "5. Quit" << endl;
+        << "0. Quit" << endl;
     int input;
-    while (!(cin >> input) || input < 0 || input > 5){
-        invalidInputHandler({0,1,2,3,4},5);
+    while (!(cin >> input) || input < 0 || input > 4){
+        invalidInputHandler({0,1,2,3},4);
     }
     string a,b;
     if (input == 0) mainMenu(fm);
@@ -478,7 +478,7 @@ void Menu::sourceTargetOptions(FlightManagement fm, vector<Vertex<string>*> &vec
              << ", " <<  closest.country << endl;
         vector.push_back(s);
     }
-    else if (input == 5){
+    else if (input == 0){
         mainMenu(fm);
     }
 

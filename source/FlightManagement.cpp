@@ -529,8 +529,8 @@ void dfs_art(Graph<string> &g, Vertex<string> *v, stack<string> &s, unordered_se
 bool inStack(Vertex<string>* w,stack<string> s){
     while(!s.empty()){
         string a = s.top();
-        s.pop();
         if(a == w->getInfo()) return true;
+        s.pop();
     }
     return false;
 }
